@@ -8,7 +8,7 @@ parts_list <- read_csv("parts_list.csv")
 # Define UI
 ui <- fluidPage(
   titlePanel("UniCo Order Status Tracker"),
-  
+
   sidebarLayout(
     sidebarPanel(
       selectInput(
@@ -18,11 +18,11 @@ ui <- fluidPage(
         selected = 41427
       )
     ),
-    
+
     mainPanel(
       h3("Order Information"),
       verbatimTextOutput("order_info"),
-      
+
       h3("Required Parts"),
       tableOutput("parts_table")
     )
@@ -31,12 +31,12 @@ ui <- fluidPage(
 
 # Define server logic
 server <- function(input, output, session) {
-  
+
   # Display order information
   output$order_info <- renderPrint({
     selected_order <- orders %>%
       filter(order_num == input$order_id)
-    
+
     cat("Order Number:", selected_order$order_num, "\n")
     cat("Customer:", selected_order$customer, "\n")
     cat("Product:", selected_order$product, "\n")
@@ -44,12 +44,12 @@ server <- function(input, output, session) {
     cat("Due Date:", as.character(selected_order$due_date), "\n")
     cat("Status:", selected_order$status, "\n")
     cat("Completion:", selected_order$completion_pct, "%\n")
-    
+
     if (selected_order$status == "LATE") {
       cat("\n*** ALERT: ORDER IS", selected_order$days_overdue, "DAYS OVERDUE ***\n")
     }
   })
-  
+
   # Display parts table
   output$parts_table <- renderTable({
     parts_list %>%
